@@ -1,5 +1,3 @@
-/// <reference types="vite/client" />
-
 interface ElectronAPI {
   getApiKey: () => Promise<string>
   setApiKey: (apiKey: string) => Promise<boolean>

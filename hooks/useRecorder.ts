@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useRef, useCallback, useEffect } from 'react'
 
 const MAX_DURATION = 300 // 5 Minuten in Sekunden
@@ -24,8 +26,14 @@ export function useRecorder(): UseRecorderReturn {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const streamRef = useRef<MediaStream | null>(null)
   const chunksRef = useRef<Blob[]>([])
-  const timerRef = useRef<NodeJS.Timeout | null>(null)
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const startTimeRef = useRef<number>(0)
+
+  const stopRecording = useCallback(() => {
+    if (mediaRecorderRef.current && state === 'recording') {
+      mediaRecorderRef.current.stop()
+    }
+  }, [state])
 
   // Timer für Aufnahmedauer
   useEffect(() => {
@@ -56,7 +64,7 @@ export function useRecorder(): UseRecorderReturn {
         clearInterval(timerRef.current)
       }
     }
-  }, [state, isWarning])
+  }, [state, isWarning, stopRecording])
 
   const startRecording = useCallback(async () => {
     try {
@@ -125,12 +133,6 @@ export function useRecorder(): UseRecorderReturn {
       setState('idle')
     }
   }, [])
-
-  const stopRecording = useCallback(() => {
-    if (mediaRecorderRef.current && state === 'recording') {
-      mediaRecorderRef.current.stop()
-    }
-  }, [state])
 
   const reset = useCallback(() => {
     // Cleanup

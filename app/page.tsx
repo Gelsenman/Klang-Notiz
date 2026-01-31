@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react'
-import { Overlay } from './components/Overlay'
-import { Onboarding } from './components/Onboarding'
-import { Toaster } from './components/ui/toaster'
+'use client'
 
-function App() {
+import { useState, useEffect } from 'react'
+import { Overlay } from '@/components/Overlay'
+import { Onboarding } from '@/components/Onboarding'
+import { Toaster } from '@/components/ui/toaster'
+
+export default function Home() {
   const [isFirstRun, setIsFirstRun] = useState<boolean | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -59,5 +61,3 @@ function App() {
     </div>
   )
 }
-
-export default App

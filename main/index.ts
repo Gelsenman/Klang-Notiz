@@ -1,6 +1,5 @@
 import { app, shell, BrowserWindow, globalShortcut, ipcMain, clipboard } from 'electron'
 import { join } from 'path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import Store from 'electron-store'
 import OpenAI from 'openai'
 
@@ -15,6 +14,8 @@ const store = new Store({
 
 let mainWindow: BrowserWindow | null = null
 
+const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged
+
 function createWindow(): void {
   // Overlay-Fenster erstellen
   mainWindow = new BrowserWindow({
@@ -27,7 +28,7 @@ function createWindow(): void {
     skipTaskbar: true,
     resizable: false,
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
+      preload: join(__dirname, 'preload.js'),
       sandbox: false,
       contextIsolation: true,
       nodeIntegration: false
@@ -43,11 +44,13 @@ function createWindow(): void {
     return { action: 'deny' }
   })
 
-  // HMR für Entwicklung, sonst lokale Datei laden
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
+  // Development: Next.js Dev Server, Production: Static Export
+  if (isDev) {
+    mainWindow.loadURL('http://localhost:3000')
+    // DevTools in Entwicklung öffnen
+    mainWindow.webContents.openDevTools({ mode: 'detach' })
   } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+    mainWindow.loadFile(join(__dirname, '../out/index.html'))
   }
 }
 
@@ -194,14 +197,6 @@ Antworte nur mit der Nachricht, keine Erklärungen.`
 
 // App Lifecycle
 app.whenReady().then(() => {
-  // Electron App ID setzen
-  electronApp.setAppUserModelId('net.feldhege.klang-notiz')
-
-  // DevTools in Entwicklung öffnen
-  app.on('browser-window-created', (_, window) => {
-    optimizer.watchWindowShortcuts(window)
-  })
-
   setupIpcHandlers()
   createWindow()
   registerGlobalShortcut()

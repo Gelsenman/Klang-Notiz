@@ -2,17 +2,20 @@
   "name": "klang-notiz",
   "version": "1.0.0",
   "description": "Hotkey Voice Brief - Sprachnotizen zu strukturierten Texten",
-  "main": "./out/main/index.js",
+  "main": "dist/main/index.js",
   "author": "Feldhege",
   "license": "MIT",
   "scripts": {
-    "dev": "electron-vite dev",
-    "build": "electron-vite build",
-    "preview": "electron-vite preview",
+    "dev": "concurrently -k \"npm run dev:next\" \"npm run dev:electron\"",
+    "dev:next": "next dev -p 3000",
+    "dev:electron": "wait-on http://localhost:3000 && npm run build:main && electron .",
+    "build": "npm run build:next && npm run build:main",
+    "build:next": "next build",
+    "build:main": "tsc -p tsconfig.main.json",
+    "start": "electron .",
     "postinstall": "electron-builder install-app-deps",
-    "build:win": "npm run build && electron-builder --win",
-    "build:mac": "npm run build && electron-builder --mac",
-    "build:linux": "npm run build && electron-builder --linux"
+    "dist": "npm run build && electron-builder",
+    "dist:win": "npm run build && electron-builder --win"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.4",
@@ -24,6 +27,7 @@
     "clsx": "^2.1.1",
     "electron-store": "^8.2.0",
     "lucide-react": "^0.469.0",
+    "next": "^14.2.21",
     "openai": "^4.77.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -31,19 +35,35 @@
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
-    "@electron-toolkit/tsconfig": "^1.0.1",
-    "@electron-toolkit/utils": "^3.0.0",
     "@types/node": "^22.10.2",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
-    "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.2",
     "electron": "^33.2.1",
     "electron-builder": "^25.1.8",
-    "electron-vite": "^2.3.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.2",
-    "vite": "^5.4.11"
+    "wait-on": "^8.0.2"
+  },
+  "build": {
+    "appId": "net.feldhege.klang-notiz",
+    "productName": "Klang-Notiz",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "out/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "public/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "public/icon.icns"
+    }
   }
 }

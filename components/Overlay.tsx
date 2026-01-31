@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from 'react'
 import { useRecorder } from '@/hooks/useRecorder'
 import { Button } from './ui/button'
@@ -17,8 +19,7 @@ import {
   FileText,
   CheckSquare,
   MessageSquare,
-  ArrowLeft,
-  Trash2
+  ArrowLeft
 } from 'lucide-react'
 
 type AppState = 
@@ -67,6 +68,7 @@ export function Overlay() {
     if (recorder.state === 'stopped' && recorder.audioBlob) {
       handleTranscribe()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recorder.state, recorder.audioBlob])
 
   // Fehler vom Recorder anzeigen

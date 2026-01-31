@@ -84,3 +84,11 @@
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-text-secondary;
 }
+
+/* Line Clamp Utility */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

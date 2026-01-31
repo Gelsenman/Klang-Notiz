@@ -3,6 +3,7 @@
 **Hotkey Voice Brief** - Verwandle Sprachnotizen in strukturierte Texte mit einem Tastendruck.
 
 ![Electron](https://img.shields.io/badge/Electron-33-47848F?logo=electron)
+![Next.js](https://img.shields.io/badge/Next.js-14-000000?logo=next.js)
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)
 ![OpenAI](https://img.shields.io/badge/OpenAI-API-412991?logo=openai)
@@ -26,7 +27,7 @@
 │                     Electron App                             │
 ├─────────────────────────┬───────────────────────────────────┤
 │     Main Process        │        Renderer Process           │
-│     (Node.js)           │        (React + Vite)             │
+│     (Node.js)           │        (Next.js + React)          │
 ├─────────────────────────┼───────────────────────────────────┤
 │ • Global Hotkey         │ • UI (Tailwind + shadcn)          │
 │ • Window Management     │ • MediaRecorder API               │
@@ -47,8 +48,8 @@
 | Komponente | Technologie |
 |------------|-------------|
 | Desktop Runtime | Electron 33 |
-| Frontend | React 18 + TypeScript |
-| Build Tool | electron-vite |
+| Frontend Framework | **Next.js 14** + React 18 |
+| Language | TypeScript 5 |
 | Styling | Tailwind CSS + shadcn/ui |
 | Transkription | OpenAI Whisper API |
 | LLM | OpenAI GPT-4o-mini |
@@ -96,26 +97,54 @@ Beim ersten Start wirst du nach deinem OpenAI API-Key gefragt.
 
 ```bash
 # Windows Build
-npm run build:win
+npm run dist:win
 
 # Alle Plattformen
-npm run build
+npm run dist
 ```
 
 ## Projektstruktur
 
 ```
 klang-notiz/
-├── electron/              # Main Process
-│   ├── main/index.ts      # Entry + Hotkey + IPC
-│   └── preload/index.ts   # Context Bridge
-├── src/                   # Renderer Process (React)
-│   ├── components/        # UI Komponenten
-│   ├── hooks/             # React Hooks
-│   └── lib/               # Utilities
-├── package.json
-└── electron.vite.config.ts
+├── main/                  # Electron Main Process
+│   ├── index.ts           # Entry + Hotkey + IPC
+│   └── preload.ts         # Context Bridge
+├── app/                   # Next.js App Router
+│   ├── layout.tsx         # Root Layout
+│   ├── page.tsx           # Main Page
+│   └── globals.css        # Tailwind Styles
+├── components/            # React UI Komponenten
+│   ├── Overlay.tsx        # Haupt-UI
+│   ├── Onboarding.tsx     # Ersteinrichtung
+│   └── ui/                # shadcn/ui Komponenten
+├── hooks/                 # React Hooks
+│   └── useRecorder.ts     # Audio Recording
+├── lib/                   # Utilities
+├── next.config.mjs        # Next.js Config (Static Export)
+├── tailwind.config.ts     # Tailwind mit Feldhege Design
+└── package.json
 ```
+
+## Design Entscheidungen
+
+### Warum Next.js + Electron?
+
+- **Next.js** bietet modernstes React-Framework mit App Router
+- **Static Export** (`output: 'export'`) ermöglicht Nutzung in Electron ohne Server
+- **Electron** für native Desktop-Features (Global Hotkey, System Tray, etc.)
+
+### Voice Pipeline
+
+1. **Aufnahme** - Web MediaRecorder API (WebM/Opus)
+2. **Transkription** - OpenAI Whisper API (cloud-basiert, präzise)
+3. **Enrichment** - GPT-4o-mini mit Template-spezifischen Prompts
+
+### Sicherheit
+
+- API Key wird lokal gespeichert (`electron-store`)
+- Context Isolation aktiviert
+- Keine Node.js-Integration im Renderer
 
 ## Design System
 
