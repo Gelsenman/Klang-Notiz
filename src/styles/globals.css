@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Feldhege Design System - Base Styles */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-transparent text-text-primary font-sans antialiased;
+    /* Transparent background für Overlay */
+    background: transparent;
+    overflow: hidden;
+  }
+  
+  /* Draggable Region für Fenster-Bewegung */
+  .drag-region {
+    -webkit-app-region: drag;
+  }
+  
+  .no-drag {
+    -webkit-app-region: no-drag;
+  }
+}
+
+@layer components {
+  /* Card Component */
+  .card {
+    @apply bg-card rounded-xl shadow-card p-6 border border-border;
+  }
+  
+  /* Primary Button */
+  .btn-primary {
+    @apply bg-feldhege hover:bg-feldhege-500 active:bg-feldhege-600 
+           text-white font-medium px-4 py-2 rounded-lg
+           transition-all duration-200 
+           focus:outline-none focus:ring-2 focus:ring-feldhege-300;
+  }
+  
+  /* Secondary Button */
+  .btn-secondary {
+    @apply bg-background hover:bg-border 
+           text-text-primary font-medium px-4 py-2 rounded-lg
+           transition-all duration-200 border border-border
+           focus:outline-none focus:ring-2 focus:ring-feldhege-200;
+  }
+  
+  /* Ghost Button */
+  .btn-ghost {
+    @apply hover:bg-feldhege-50 
+           text-text-secondary hover:text-text-primary 
+           font-medium px-4 py-2 rounded-lg
+           transition-all duration-200;
+  }
+  
+  /* Recording Button */
+  .btn-record {
+    @apply bg-red-500 hover:bg-red-600 active:bg-red-700
+           text-white font-medium px-6 py-3 rounded-full
+           transition-all duration-200 
+           focus:outline-none focus:ring-2 focus:ring-red-300;
+  }
+  
+  .btn-record.recording {
+    @apply animate-pulse-recording;
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-border rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-text-secondary;
+}
