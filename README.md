@@ -87,6 +87,57 @@ Beim ersten Start wirst du nach deinem OpenAI API-Key gefragt.
 
 ---
 
+## Konfiguration
+
+### OpenAI API Key
+
+Beim ersten Start wirst du nach deinem API Key gefragt. Du kannst einen Key hier erstellen:
+👉 [OpenAI API Keys](https://platform.openai.com/api-keys)
+
+**Kosten-Hinweis:** Die App nutzt:
+- **Whisper API** (~$0.006 pro Minute Audio)
+- **GPT-4o-mini** (~$0.00015 pro 1K Input-Tokens)
+
+Eine typische Notiz kostet weniger als **$0.01**.
+
+### Wo werden meine Daten gespeichert?
+
+Alle Daten werden **lokal** auf deinem Computer gespeichert:
+
+| Betriebssystem | Speicherort |
+|----------------|-------------|
+| Windows | `%APPDATA%\klang-notiz\config.json` |
+| macOS | `~/Library/Application Support/klang-notiz/config.json` |
+| Linux | `~/.config/klang-notiz/config.json` |
+
+**Gespeicherte Daten:**
+- Dein OpenAI API Key (verschlüsselt)
+- History der letzten 50 Einträge
+- Onboarding-Status
+
+### API Key ändern
+
+Um deinen API Key zu ändern, lösche die Konfigurationsdatei und starte die App neu:
+
+```bash
+# Windows (PowerShell)
+Remove-Item "$env:APPDATA\klang-notiz\config.json"
+
+# macOS / Linux
+rm ~/.config/klang-notiz/config.json
+```
+
+### Troubleshooting
+
+| Problem | Lösung |
+|---------|--------|
+| Hotkey funktioniert nicht | Prüfe ob eine andere App `Ctrl+Shift+Space` belegt |
+| Mikrofon wird nicht erkannt | Erlaube Mikrofon-Zugriff in den Systemeinstellungen |
+| API-Fehler | Prüfe deinen API Key und dein OpenAI-Guthaben |
+| App startet nicht | Lösche `node_modules` und führe `npm install` erneut aus |
+
+---
+
 ## Technische Details
 
 <details>
