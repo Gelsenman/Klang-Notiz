@@ -47,8 +47,6 @@ function createWindow(): void {
   // Development: Next.js Dev Server, Production: Static Export
   if (isDev) {
     mainWindow.loadURL('http://localhost:3000')
-    // DevTools in Entwicklung öffnen
-    mainWindow.webContents.openDevTools({ mode: 'detach' })
   } else {
     mainWindow.loadFile(join(__dirname, '../out/index.html'))
   }
