@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Overlay } from '@/components/Overlay'
 import { Onboarding } from '@/components/Onboarding'
 import { Toaster } from '@/components/ui/toaster'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 export default function Home() {
   const [isFirstRun, setIsFirstRun] = useState<boolean | null>(null)
@@ -52,11 +53,13 @@ export default function Home() {
 
   return (
     <div className="h-screen w-screen flex items-center justify-center p-4">
-      {isFirstRun ? (
-        <Onboarding onComplete={handleOnboardingComplete} />
-      ) : (
-        <Overlay />
-      )}
+      <ErrorBoundary>
+        {isFirstRun ? (
+          <Onboarding onComplete={handleOnboardingComplete} />
+        ) : (
+          <Overlay />
+        )}
+      </ErrorBoundary>
       <Toaster />
     </div>
   )

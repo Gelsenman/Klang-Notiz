@@ -9,8 +9,11 @@ const electronAPI = {
   setFirstRunComplete: (): Promise<boolean> => ipcRenderer.invoke('set-first-run-complete'),
 
   // Transcription & Enrichment
-  transcribe: (audioBuffer: ArrayBuffer): Promise<string> => 
-    ipcRenderer.invoke('transcribe', audioBuffer),
+  transcribe: (audioBuffer: ArrayBuffer): Promise<string> => {
+    // Convert to Uint8Array for reliable IPC transfer
+    const uint8Array = new Uint8Array(audioBuffer)
+    return ipcRenderer.invoke('transcribe', Array.from(uint8Array))
+  },
   enrich: (transcript: string, template: string): Promise<string> => 
     ipcRenderer.invoke('enrich', transcript, template),
 

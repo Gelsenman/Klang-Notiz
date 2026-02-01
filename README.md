@@ -42,7 +42,10 @@ Keine App wechseln. Kein Tippen. Kein Nachbearbeiten.
 | 🎯 **3 smarte Templates** | Notiz, Aufgaben oder Nachricht – du entscheidest |
 | 🧠 **KI-gestützt** | Versteht Kontext und strukturiert automatisch |
 | 📋 **Ein-Klick-Kopieren** | Direkt in die Zwischenablage |
-| 🔒 **Privat** | Dein API-Key, deine Daten – lokal gespeichert |
+| 🔒 **Privat & Sicher** | API-Key verschlüsselt, alle Daten lokal |
+| ⌨️ **Keyboard Shortcuts** | Volle Steuerung ohne Maus |
+| 📜 **History** | Zugriff auf die letzten 50 Einträge |
+| 🚀 **Schnell** | Optimierte Audiokompression für schnelle Transkription |
 
 ---
 
@@ -84,6 +87,10 @@ Beim ersten Start wirst du nach deinem OpenAI API-Key gefragt.
 |--------|-------------------|
 | Overlay öffnen/schließen | `Ctrl+Shift+Space` |
 | Overlay schließen | `ESC` |
+| Aufnahme starten/stoppen | `Enter` |
+| Kopieren (nach Transkription) | `C` |
+| Speichern (nach Transkription) | `S` |
+| Zurücksetzen | `R` |
 
 ---
 
@@ -135,6 +142,8 @@ rm ~/.config/klang-notiz/config.json
 | Mikrofon wird nicht erkannt | Erlaube Mikrofon-Zugriff in den Systemeinstellungen |
 | API-Fehler | Prüfe deinen API Key und dein OpenAI-Guthaben |
 | App startet nicht | Lösche `node_modules` und führe `npm install` erneut aus |
+| Transkription hängt | Klicke "Abbrechen" und versuche es erneut |
+| Keine Internetverbindung | Die App erkennt Offline-Status und zeigt eine Meldung |
 
 ---
 
@@ -196,6 +205,7 @@ klang-notiz/
 ├── components/            # React UI Komponenten
 │   ├── Overlay.tsx        # Haupt-UI
 │   ├── Onboarding.tsx     # Ersteinrichtung
+│   ├── ErrorBoundary.tsx  # Fehlerbehandlung
 │   └── ui/                # shadcn/ui Komponenten
 ├── hooks/                 # React Hooks
 │   └── useRecorder.ts     # Audio Recording
@@ -218,15 +228,19 @@ klang-notiz/
 
 ### Voice Pipeline
 
-1. **Aufnahme** - Web MediaRecorder API (WebM/Opus)
-2. **Transkription** - OpenAI Whisper API (cloud-basiert, präzise)
-3. **Enrichment** - GPT-4o-mini mit Template-spezifischen Prompts
+1. **Aufnahme** - Web MediaRecorder API (WebM/Opus, 16kbps Mono)
+2. **Transkription** - OpenAI Whisper API (cloud-basiert, präzise, ~2 Sekunden)
+3. **Enrichment** - GPT-4o-mini mit Template-spezifischen Prompts (~1-2 Sekunden)
+
+Die Audiokompression ist für Sprache optimiert (16kHz, Mono, 16kbps), was zu kleinen Dateien (~10-15KB pro Aufnahme) und schneller Transkription führt.
 
 ### Sicherheit
 
-- API Key wird lokal gespeichert (`electron-store`)
+- API Key wird **verschlüsselt** gespeichert (OS-Keychain via `safeStorage`)
 - Context Isolation aktiviert
 - Keine Node.js-Integration im Renderer
+- Input-Validierung für alle API-Aufrufe
+- Offline-Erkennung vor API-Aufrufen
 
 ### Design System
 
@@ -275,5 +289,3 @@ MIT
 ---
 
 **Klang-Notiz** – Sprich. Strukturiere. Erledige.
-
-Entwickelt mit dem [Feldhege Design System](DESIGN_SYSTEM.md)

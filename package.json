@@ -8,11 +8,11 @@
   "scripts": {
     "dev": "concurrently -k \"npm run dev:next\" \"npm run dev:electron\"",
     "dev:next": "next dev -p 3000",
-    "dev:electron": "wait-on http://localhost:3000 && npm run build:main && electron .",
+    "dev:electron": "wait-on http://localhost:3000 && npm run build:main && cross-env NODE_ENV=development electron .",
     "build": "npm run build:next && npm run build:main",
     "build:next": "next build",
     "build:main": "tsc -p tsconfig.main.json",
-    "start": "electron .",
+    "start": "cross-env NODE_ENV=production electron .",
     "postinstall": "electron-builder install-app-deps",
     "dist": "npm run build && electron-builder",
     "dist:win": "npm run build && electron-builder --win"
@@ -40,6 +40,7 @@
     "@types/react-dom": "^18.3.5",
     "autoprefixer": "^10.4.20",
     "concurrently": "^9.1.2",
+    "cross-env": "^10.1.0",
     "electron": "^33.2.1",
     "electron-builder": "^25.1.8",
     "postcss": "^8.4.49",

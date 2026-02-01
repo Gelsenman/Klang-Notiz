@@ -51,7 +51,7 @@ export function useRecorder(): UseRecorderReturn {
         if (elapsed >= MAX_DURATION) {
           stopRecording()
         }
-      }, 100)
+      }, 1000)  // Update every second - only need second precision for display
     } else {
       if (timerRef.current) {
         clearInterval(timerRef.current)
@@ -73,9 +73,11 @@ export function useRecorder(): UseRecorderReturn {
       setIsWarning(false)
       chunksRef.current = []
 
-      // Mikrofon-Zugriff anfordern
+      // Mikrofon-Zugriff anfordern - optimiert für Sprache
       const stream = await navigator.mediaDevices.getUserMedia({ 
         audio: {
+          sampleRate: 16000,      // 16kHz is optimal for speech recognition
+          channelCount: 1,        // Mono is sufficient for speech
           echoCancellation: true,
           noiseSuppression: true,
           autoGainControl: true
@@ -83,9 +85,10 @@ export function useRecorder(): UseRecorderReturn {
       })
       streamRef.current = stream
 
-      // MediaRecorder erstellen
+      // MediaRecorder erstellen mit niedriger Bitrate für kleine Dateien
       const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: 'audio/webm;codecs=opus'
+        mimeType: 'audio/webm;codecs=opus',
+        audioBitsPerSecond: 16000  // 16kbps - minimal for speech, ~120KB/min
       })
       mediaRecorderRef.current = mediaRecorder
 
