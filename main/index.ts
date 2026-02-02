@@ -7,7 +7,7 @@ import OpenAI from 'openai'
 
 // Simple static file server for production
 let staticServer: Server | null = null
-const STATIC_PORT = 23456 // Random high port for local static server
+let staticPort = 0 // Will be assigned dynamically
 
 const MIME_TYPES: Record<string, string> = {
   '.html': 'text/html',
@@ -65,7 +65,11 @@ async function startStaticServer(): Promise<void> {
   })
   
   await new Promise<void>((resolve) => {
-    staticServer!.listen(STATIC_PORT, '127.0.0.1', () => {
+    staticServer!.listen(0, '127.0.0.1', () => {
+      const address = staticServer!.address()
+      if (address && typeof address === 'object') {
+        staticPort = address.port
+      }
       resolve()
     })
   })
@@ -165,7 +169,7 @@ async function createWindow(): Promise<void> {
     mainWindow.loadURL('http://localhost:3000')
   } else {
     await startStaticServer()
-    mainWindow.loadURL(`http://127.0.0.1:${STATIC_PORT}`)
+    mainWindow.loadURL(`http://127.0.0.1:${staticPort}`)
   }
 }
 

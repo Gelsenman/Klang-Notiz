@@ -46,6 +46,7 @@ Keine App wechseln. Kein Tippen. Kein Nachbearbeiten.
 | ⌨️ **Keyboard Shortcuts** | Volle Steuerung ohne Maus |
 | 📜 **History** | Zugriff auf die letzten 50 Einträge |
 | 🚀 **Schnell** | Optimierte Audiokompression für schnelle Transkription |
+| 📦 **Portable** | Eine Exe-Datei, keine Installation nötig |
 
 ---
 
@@ -60,12 +61,22 @@ Keine App wechseln. Kein Tippen. Kein Nachbearbeiten.
 
 ## Installation
 
-### Voraussetzungen
+### Option 1: Portable Windows-Version (empfohlen)
+
+1. Lade `Klang-Notiz 1.0.0.exe` aus dem [Release](https://github.com/Gelsenman/Klang-Notiz/releases) herunter
+2. Starte die Exe (beim ersten Start: Windows SmartScreen mit "Weitere Informationen" → "Trotzdem ausführen" bestätigen)
+3. Gib deinen OpenAI API-Key ein
+
+**Fertig!** Keine Installation nötig.
+
+### Option 2: Aus Quellcode
+
+#### Voraussetzungen
 
 - Node.js 18+
 - OpenAI API Key ([hier erstellen](https://platform.openai.com/api-keys))
 
-### Setup
+#### Setup
 
 ```bash
 # Repository klonen
@@ -258,12 +269,22 @@ Die App verwendet das **Feldhege Design System**:
 ## Build
 
 ```bash
-# Windows Build
+# Windows Portable Exe erstellen
 npm run dist:win
+# Output: release/Klang-Notiz 1.0.0.exe (~109 MB)
 
 # Alle Plattformen
 npm run dist
 ```
+
+### Build-Hinweise
+
+| Target | Datei | Größe | Hinweis |
+|--------|-------|-------|---------|
+| Windows Portable | `Klang-Notiz 1.0.0.exe` | ~109 MB | Keine Installation nötig |
+| Windows Unpacked | `release/win-unpacked/` | ~180 MB | Zum Testen ohne Packen |
+
+**Ohne Code-Signatur:** Windows SmartScreen zeigt beim ersten Start eine Warnung. Benutzer müssen auf "Weitere Informationen" → "Trotzdem ausführen" klicken.
 
 ---
 
